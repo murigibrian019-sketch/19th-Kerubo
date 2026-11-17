@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday!</title>
+<style>
+:root{--bg:#1d1030;--bg2:#2c1747;--ink:#fff6ec;--muted:#cdb8e6;--accent:#ffcf5c;--pop:#ff5d73;--card:rgba(255,255,255,.09)}
+[data-theme=sunny]{--bg:#fff3e0;--bg2:#ffdcb0;--ink:#3a1c2b;--muted:#7d4e61;--accent:#ff9f1c;--pop:#e8334f;--card:rgba(58,28,43,.07)}
+[data-theme=ocean]{--bg:#06303a;--bg2:#0b4a57;--ink:#effcf8;--muted:#9fd8cf;--accent:#5ce0c0;--pop:#ffb86b;--card:rgba(255,255,255,.09)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font:18px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(var(--bg),var(--bg2)) fixed;text-align:center}
+section,header{padding:3rem 1.25rem;max-width:880px;margin:0 auto}
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+h1{font:italic 700 clamp(2.6rem,11vw,5.5rem)/1.05 "Brush Script MT","Segoe Script","Snell Roundhand",cursive;margin:0 0 1rem;text-wrap:balance}
+h2{font:700 1.5rem/1.2 Georgia,serif;margin:0 0 1.5rem}
+#hint{color:var(--muted);margin:1.5rem 0 0}
+/* cake */
+.cake{width:min(250px,70vw);margin:1.5rem auto 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.candles{display:flex;justify-content:space-around;padding:0 18%}
+.candle{position:relative;width:10px;height:42px;margin-top:22px;border-radius:3px;background:repeating-linear-gradient(135deg,#fff 0 6px,var(--pop) 6px 12px)}
+.flame{position:absolute;left:50%;top:-22px;width:13px;height:21px;margin-left:-6.5px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(circle at 50% 72%,#fff 0 22%,#ffd45c 58%,#ff8a3d);box-shadow:0 0 18px 6px rgba(255,200,90,.5);animation:fl .14s infinite alternate;transition:opacity .3s,transform .3s}
+@keyframes fl{to{transform:scale(1.1) rotate(4deg)}}
+.out .flame{opacity:0;transform:scale(.2);animation:none}
+.t1,.t2{margin:0 auto;border-radius:14px 14px 5px 5px}
+.t1{width:68%;height:52px;background:linear-gradient(var(--accent) 0 13px,var(--pop) 13px)}
+.t2{width:100%;height:64px;background:linear-gradient(var(--accent) 0 13px,var(--ink) 13px);margin-top:2px}
+.plate{width:122%;margin:0 -11%;height:11px;border-radius:8px;background:var(--muted)}
+/* lines */
+#line{font:italic 600 clamp(1.4rem,5vw,2.2rem)/1.35 Georgia,serif;min-height:5.5em;display:flex;align-items:center;justify-content:center;margin:0;transition:opacity .4s}
+/* gallery */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+figure{margin:0;background:var(--card);border-radius:10px;overflow:hidden}
+figure img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;cursor:zoom-in}
+figcaption{padding:.6rem .7rem;font-size:.9rem;color:var(--muted)}
+figure.empty::before{content:"\1F4F7  Add a photo";display:flex;align-items:center;justify-content:center;aspect-ratio:4/5;color:var(--muted);font-size:.95rem}
+/* letter */
+.letter p{margin:0 auto 1rem;max-width:34em;font-family:Georgia,serif;white-space:pre-line;text-align:left}
+.letter .sign{text-align:right;font:italic 1.6rem "Brush Script MT","Segoe Script",cursive}
+#theme{position:fixed;top:12px;right:12px;z-index:5;width:44px;height:44px;border:0;border-radius:50%;background:var(--card);color:var(--ink);font-size:1.3rem;cursor:pointer}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:9}
+#lb{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out}
+#lb[hidden]{display:none}
+#lb img{max-width:100%;max-height:100%;border-radius:8px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}html{scroll-behavior:auto}}
+.btn{display:inline-block;margin:1.2rem 0 0;padding:.7rem 1.3rem;border:0;border-radius:999px;background:var(--accent);color:#2a1033;font:600 1rem system-ui,sans-serif;cursor:pointer}
+.add input[type=text],.add textarea{display:block;width:100%;max-width:30em;margin:0 auto .7rem;padding:.7rem .9rem;border-radius:10px;border:1px solid var(--muted);background:var(--card);color:var(--ink);font:inherit}
+.add textarea{min-height:6.5em;resize:vertical}
+.note{margin:0 auto 12px;max-width:34em;padding:1rem 1.2rem;border-radius:10px;background:var(--card);text-align:left}
+.note p{margin:0 0 .4rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.note cite{color:var(--muted);font-size:.9rem}
+.small{color:var(--muted);font-size:.85rem;max-width:32em;margin:.8rem auto 0}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<button id="theme" aria-label="Change colours">&#127912;</button>
+
+<header class="hero">
+  <h1 id="title"></h1>
+  <div class="cake" id="cake" role="button" tabindex="0" aria-label="Blow out the candles">
+    <div class="candles" id="candles"></div>
+    <div class="t1"></div><div class="t2"></div><div class="plate"></div>
+  </div>
+  <p id="hint">Tap the cake to blow out the candles</p>
+</header>
+
+<section><p id="line"></p></section>
+<section><h2>Our moments</h2><div class="grid" id="grid"></div>
+  <button class="btn" id="addp">&#128247; Add your photo</button><input type="file" id="pick" accept="image/*" multiple hidden></section>
+<section class="letter"><h2>A little note for you</h2><p id="msg"></p><p class="sign" id="from"></p></section>
+<section class="add"><h2>Birthday wishes</h2><div id="notes"></div>
+  <input type="text" id="who" placeholder="Your name" maxlength="40">
+  <textarea id="wish" placeholder="Write your birthday wish…" maxlength="400"></textarea>
+  <button class="btn" id="post">Post my wish</button>
+  <p class="small" id="status">Photos and wishes you add are kept on this device. To send them on, tap “Save a copy”.</p>
+  <button class="btn" id="save">Save a copy to share</button></section>
+<script type="application/json" id="saved">{}</script>
+<div id="lb" hidden><img alt=""></div>
+
+<script>
+/* ====== EDIT THIS PART ====== */
+const CONFIG = {
+  name: "Kerubo Lydia",
+  age: 19,
+  from: "Brian",
+  theme: "night",            // night | sunny | ocean
+  lines: [
+    "Nineteen looks amazing on you.",
+    "Another year older, another year more legendary.",
+    "You don\u2019t age, you level up.",
+    "Today the world gets a little brighter.",
+    "Cake first. Diet never.",
+    "May this year be as awesome as you are.",
+    "Not a day older, just a day more iconic.",
+    "19 and only just getting started."
+  ],
+  message: "Today is all about you.\nThank you for the laughs, the memories, and for being exactly who you are. I hope this year brings you everything you\u2019ve been working toward, and a lot of cake along the way.\nHappy 19th birthday, Kerubo!",
+  photos: [
+    { src: "photos/1.jpg", caption: "Where it all started" },
+    { src: "photos/2.jpg", caption: "That unforgettable day" },
+    { src: "photos/3.jpg", caption: "Pure joy" },
+    { src: "photos/4.jpg", caption: "Us being us" }
+  ]
+};
+/* ====== END OF EDITABLE PART ====== */
+
+const $ = s => document.querySelector(s);
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.documentElement.dataset.theme = CONFIG.theme;
+const ord = n => n + (["th", "st", "nd", "rd"][(n % 100 > 10 && n % 100 < 14) || n % 10 > 3 ? 0 : n % 10]);
+const greet = "Happy " + (CONFIG.age ? ord(CONFIG.age) + " " : "") + "Birthday, " + CONFIG.name + "!";
+document.title = greet; $("#title").textContent = greet;
+$("#msg").textContent = CONFIG.message;
+$("#from").textContent = "With love, " + CONFIG.from;
+
+for (let i = 0; i < 5; i++) { const c = document.createElement("div"); c.className = "candle"; c.innerHTML = '<div class="flame"></div>'; $("#candles").append(c); }
+
+const KEY = "bday-" + CONFIG.name.replace(/\W/g, "").toLowerCase();
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const merge = (...l) => [...new Map(l.flat().filter(Boolean).map(i => [i.id, i])).values()];
+let saved = {}, mine = {};
+try { saved = JSON.parse($("#saved").textContent); } catch (e) {}
+try { mine = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const G = { photos: merge(saved.photos, mine.photos), notes: merge(saved.notes, mine.notes) };
+
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(G)); $("#status").textContent = "Added! Tap \u201CSave a copy\u201D to send it on."; }
+  catch (e) { $("#status").textContent = "Added, but this browser can\u2019t store it. Tap \u201CSave a copy\u201D so it isn\u2019t lost."; }
+}
+function render() {
+  const grid = $("#grid"); grid.replaceChildren();
+  [...CONFIG.photos, ...G.photos].forEach(p => {
+    const f = document.createElement("figure"), im = new Image();
+    im.alt = p.caption || "Photo"; im.src = p.src;
+    im.onerror = () => { f.classList.add("empty"); im.remove(); };
+    im.onclick = () => { $("#lb img").src = im.src; $("#lb").hidden = false; };
+    f.append(im);
+    if (p.caption) { const c = document.createElement("figcaption"); c.textContent = p.caption; f.append(c); }
+    grid.append(f);
+  });
+  const box = $("#notes"); box.replaceChildren();
+  if (!G.notes.length) { const e = document.createElement("p"); e.className = "small"; e.textContent = "No wishes yet. Be the first!"; box.append(e); }
+  G.notes.forEach(n => {
+    const b = document.createElement("blockquote"), p = document.createElement("p"), c = document.createElement("cite");
+    b.className = "note"; p.textContent = n.text; c.textContent = "\u2014 " + n.who; b.append(p, c); box.append(b);
+  });
+}
+const shrink = file => new Promise(res => {
+  const r = new FileReader();
+  r.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, 900 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+      c.width = im.width * k; c.height = im.height * k;
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      res(c.toDataURL("image/jpeg", .75));
+    };
+    im.onerror = () => res(null); im.src = r.result;
+  };
+  r.readAsDataURL(file);
+});
+$("#addp").onclick = () => $("#pick").click();
+$("#pick").onchange = async e => {
+  const who = $("#who").value.trim() || "A friend";
+  for (const f of e.target.files) { const src = await shrink(f); if (src) G.photos.push({ id: uid(), src, caption: "Added by " + who }); }
+  e.target.value = ""; persist(); render();
+};
+$("#post").onclick = () => {
+  const text = $("#wish").value.trim(); if (!text) return;
+  G.notes.push({ id: uid(), who: $("#who").value.trim() || "A friend", text });
+  $("#wish").value = ""; persist(); render();
+};
+$("#save").onclick = async () => {
+  const d = document.documentElement.cloneNode(true);
+  d.querySelector("#saved").textContent = JSON.stringify(G).replace(/</g, "\\u003c");
+  ["#grid", "#notes", "#candles"].forEach(q => d.querySelector(q).replaceChildren());
+  d.querySelector("#cake").classList.remove("out");
+  d.querySelector("#hint").textContent = "Tap the cake to blow out the candles";
+  d.querySelector("#line").removeAttribute("style");
+  d.querySelector("#lb").setAttribute("hidden", "");
+  const file = new File(["<!DOCTYPE html>\n" + d.outerHTML], "birthday-share.html", { type: "text/html" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: greet }); return; } catch (e) {} }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+};
+$("#lb").onclick = () => $("#lb").hidden = true;
+render();
+
+let n = 0; const line = $("#line");
+function nextLine() { line.style.opacity = 0; setTimeout(() => { line.textContent = CONFIG.lines[n++ % CONFIG.lines.length]; line.style.opacity = 1; }, 400); }
+line.textContent = CONFIG.lines[n++ % CONFIG.lines.length];
+setInterval(nextLine, 4000);
+
+const themes = ["night", "sunny", "ocean"];
+$("#theme").onclick = () => { const d = document.documentElement.dataset; d.theme = themes[(themes.indexOf(d.theme) + 1) % themes.length]; };
+
+function confetti(count = 170) {
+  if (calm) return;
+  const c = $("#fx"), x = c.getContext("2d"), cols = ["#ffcf5c", "#ff5d73", "#5ce0c0", "#8ab4ff", "#fff6ec"];
+  c.width = innerWidth; c.height = innerHeight;
+  const p = Array.from({ length: count }, () => ({ x: innerWidth / 2, y: innerHeight * .45, vx: (Math.random() - .5) * 16, vy: -Math.random() * 16 - 4, s: Math.random() * 8 + 4, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[Math.random() * 5 | 0] }));
+  (function f() {
+    x.clearRect(0, 0, c.width, c.height);
+    p.forEach(q => { q.vy += .35; q.x += q.vx; q.y += q.vy; q.r += q.vr; x.save(); x.translate(q.x, q.y); x.rotate(q.r); x.fillStyle = q.c; x.fillRect(-q.s / 2, -q.s / 4, q.s, q.s / 2); x.restore(); });
+    if (p.some(q => q.y < c.height + 20)) requestAnimationFrame(f); else x.clearRect(0, 0, c.width, c.height);
+  })();
+}
+
+const cake = $("#cake");
+function toggle() {
+  const out = cake.classList.toggle("out");
+  $("#hint").textContent = out ? "Make a wish, then scroll down \u{1F381}" : "Tap the cake to blow out the candles";
+  if (out) { confetti(); setTimeout(() => line.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" }), 1800); }
+}
+cake.onclick = toggle;
+cake.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
+</script>
+</body>
+</html>
